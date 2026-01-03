@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ناولستان - بازگشتِ عشق</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* ڈیزائن اور اسٹائلنگ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Nastaliq Urdu', serif; background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); min-height: 100vh; color: #fff; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* ہوم اسکرین کارڈز */
+        .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 40px; }
+        .card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); }
+        .card:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.2); }
+        .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 15px; margin-bottom: 15px; }
+
+        /* مواد کے سیکشنز */
+        .content-section { display: none; padding: 20px; }
+        .content-section.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* اقساط کی گرڈ */
+        .episodes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
+        .episode-card { background: #fff; color: #333; padding: 15px; border-radius: 15px; text-align: center; cursor: pointer; font-weight: bold; }
+        
+        /* موڈل (پوپ اپ) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: #fff; color: #333; padding: 30px; border-radius: 20px; max-width: 400px; text-align: center; }
+        .btn { padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer; margin: 5px; font-family: inherit; }
+        .btn-wa { background: #25D366; color: #fff; text-decoration: none; display: inline-block; }
+        
+        .back-btn { background: #fff; color: #333; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="home-screen">
+        <h1 style="text-align: center; margin: 30px 0;">ناولستان: بازگشتِ عشق</h1>
+        
+        <div class="categories-grid">
+            <div class="card" onclick="showSection('novels')">
+                <img src="https://drive.google.com/uc?id=1A6cQPJd5qacANztlmKyU6a5xiKgNAUuz" alt="Novel">
+                <h2>📖 ناول پڑھیں</h2>
+            </div>
+            <div class="card" onclick="showSection('poetry')">
+                <img src="https://drive.google.com/uc?id=1jeO58Sf8-w5fx5SPQZG8LqJjm7QfPHTe" alt="Poetry">
+                <h2>📜 شاعری</h2>
+            </div>
+            <div class="card" onclick="showSection('codewords')">
+                <img src="https://drive.google.com/uc?id=11c5Imzwd7sOJ_yEL6gvgDQy85WW0Mvsi" alt="Codes">
+                <h2>🔐 کوڈ ورڈز</h2>
+            </div>
+            <div class="card" onclick="showSection('about')">
+                <img src="https://drive.google.com/uc?id=1bAfC0S2euvxZQKuawj_nVQGOiK9S41N7" alt="Author">
+                <h2>👤 مصنف</h2>
+            </div>
+        </div>
+    </div>
+
+    <div id="novels-section" class="content-section container">
+        <button class="btn back-btn" onclick="showHome()">← پیچھے جائیں</button>
+        <h2>تمام اقساط</h2><br>
+        <div class="episodes-grid" id="episodes-container"></div>
+    </div>
+
+    <div id="poetry-section" class="content-section container">
+        <button class="btn back-btn" onclick="showHome()">← پیچھے جائیں</button>
+        <h2>اردو شاعری</h2><br>
+        <div id="poetry-container" class="episodes-grid"></div>
+    </div>
+
+    <div id="codewords-section" class="content-section container">
+        <button class="btn back-btn" onclick="showHome()">← پیچھے جائیں</button>
+        <h2>کوڈ ورڈز لسٹ</h2><br>
+        <div id="codewords-container"></div>
+    </div>
+
+    <div id="about-section" class="content-section container">
+        <button class="btn back-btn" onclick="showHome()">← پیچھے جائیں</button>
+        <h2>مصنف کے بارے میں</h2><br>
+        <div id="about-container"></div>
+    </div>
+
+    <div id="payment-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title">یہ حصہ لاک ہے</h2>
+            <p id="payment-message"></p>
+            <a href="#" id="whatsapp-link" class="btn btn-wa" target="_blank">واٹس ایپ پر رابطہ کریں</a>
+            <button class="btn" onclick="showCodeModal()" style="background: #764ba2; color: #fff;">کوڈ درج کریں</button>
+            <button class="btn" onclick="closeModal()">بند کریں</button>
+        </div>
+    </div>
+
+    <div id="code-modal" class="modal">
+        <div class="modal-content">
+            <h2>🔑 کوڈ ورڈ لکھیں</h2>
+            <input type="text" id="code-input" style="width: 100%; padding: 10px; margin: 15px 0;" placeholder="مثال: YHDpkg1MS">
+            <button class="btn" onclick="verifyCode()" style="background: #25D366; color: #fff;">تصدیق کریں</button>
+            <button class="btn" onclick="closeModal()">کینسل</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
