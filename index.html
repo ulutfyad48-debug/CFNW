@@ -1,21 +1,27 @@
-<div style="background: #1e293b; color: white; padding: 20px; border-radius: 15px; margin-top: 30px; font-family: sans-serif; border: 2px solid #e11d48;">
-    <h2 style="color: #e11d48; text-align: center;">🛠️ آج کے ان لاک کوڈز (Admin)</h2>
-    <p id="current-date" style="text-align: center; font-size: 14px; color: #94a3b8;"></p>
+<div style="background: #1a1f3a; color: white; padding: 25px; border-radius: 20px; margin-top: 30px; font-family: 'Noto Nastaliq Urdu', serif; border: 2px solid #ff0a54; box-shadow: 0 10px 40px rgba(255,10,84,0.3);">
+    <h2 style="color: #ff0a54; text-align: center; font-size: 2rem;">🛠️ ایڈمن کنٹرول پینل</h2>
+    <p id="current-date" style="text-align: center; font-size: 16px; color: #00d9ff; margin-bottom: 5px;"></p>
+    
+    <div style="text-align: center; background: rgba(0,217,255,0.1); padding: 10px; border-radius: 10px; margin-bottom: 20px; border: 1px dashed #00d9ff;">
+        <span style="font-size: 14px; color: #ffffff;">اگلا کوڈ تبدیل ہونے میں وقت باقی:</span>
+        <div id="timer" style="font-size: 20px; font-weight: bold; color: #fbbf24; letter-spacing: 2px;">00:00:00</div>
+    </div>
+
     <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
     
-    <div id="admin-codes-list" style="display: grid; gap: 10px;">
+    <div id="admin-codes-list" style="display: grid; gap: 12px;">
         </div>
 </div>
 
 <script>
-function generateAdminCodes() {
+function updateAdminPanel() {
     const d = new Date();
     const datePart = d.getDate().toString() + (d.getMonth() + 1).toString();
     const displayDate = d.toLocaleDateString('ur-PK', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     
-    document.getElementById('current-date').innerText = "تاریخ: " + displayDate;
+    document.getElementById('current-date').innerText = "آج کی تاریخ: " + displayDate;
 
-    // پیکیجز کی لسٹ
+    // پیکیجز لسٹ (آپ کے فارمولے کے مطابق)
     const packages = [
         { name: "قسط 11-15", id: "P1_1" },
         { name: "قسط 16-20", id: "P1_2" },
@@ -27,93 +33,44 @@ function generateAdminCodes() {
     list.innerHTML = '';
 
     packages.forEach(pkg => {
-        // وہی فارمولا جو مین ایپ میں ہے: ID + Date + Month + X
+        // فارمولا: ID + Date + Month + X
         const generatedCode = (pkg.id + datePart + "X").toUpperCase();
         
         const row = document.createElement('div');
-        row.style = "display: flex; justify-content: space-between; background: #0f172a; padding: 10px; border-radius: 8px; border-right: 4px solid #22c55e;";
+        row.style = "display: flex; justify-content: space-between; background: #0a0e27; padding: 15px; border-radius: 12px; border-right: 5px solid #22c55e; align-items: center;";
         row.innerHTML = `
-            <span>${pkg.name}:</span>
-            <strong style="color: #fbbf24; letter-spacing: 1px;">${generatedCode}</strong>
+            <span style="font-size: 1.1rem;">${pkg.name}:</span>
+            <strong style="color: #fbbf24; letter-spacing: 1.5px; font-size: 1.2rem; background: rgba(251,191,36,0.1); padding: 5px 12px; border-radius: 5px; border: 1px solid rgba(251,191,36,0.3);">${generatedCode}</strong>
         `;
         list.appendChild(row);
     });
 }
 
-// پیج لوڈ ہوتے ہی کوڈز بنا دیں
-generateAdminCodes();
-</script>
-        .back-btn { background: #fff; color: #333; margin-bottom: 20px; }
-    </style>
-</head>
-<body>
+function startCountdown() {
+    setInterval(() => {
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setHours(24, 0, 0, 0); // رات 12 بجے کا وقت
 
-    <div class="container" id="home-screen">
-        <h1 style="text-align: center; margin: 30px 0;">ناولستان: بازگشتِ عشق</h1>
+        const diff = tomorrow - now;
         
-        <div class="categories-grid">
-            <div class="card" onclick="showSection('novels')">
-                <img src="https://drive.google.com/uc?id=1A6cQPJd5qacANztlmKyU6a5xiKgNAUuz" alt="Novel">
-                <h2>📖 ناول پڑھیں</h2>
-            </div>
-            <div class="card" onclick="showSection('poetry')">
-                <img src="https://drive.google.com/uc?id=1jeO58Sf8-w5fx5SPQZG8LqJjm7QfPHTe" alt="Poetry">
-                <h2>📜 شاعری</h2>
-            </div>
-            <div class="card" onclick="showSection('codewords')">
-                <img src="https://drive.google.com/uc?id=11c5Imzwd7sOJ_yEL6gvgDQy85WW0Mvsi" alt="Codes">
-                <h2>🔐 کوڈ ورڈز</h2>
-            </div>
-            <div class="card" onclick="showSection('about')">
-                <img src="https://drive.google.com/uc?id=1bAfC0S2euvxZQKuawj_nVQGOiK9S41N7" alt="Author">
-                <h2>👤 مصنف</h2>
-            </div>
-        </div>
-    </div>
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
 
-    <div id="novels-section" class="content-section container">
-        <button class="btn back-btn" onclick="showHome()">← پیچھے جائیں</button>
-        <h2>تمام اقساط</h2><br>
-        <div class="episodes-grid" id="episodes-container"></div>
-    </div>
+        document.getElementById('timer').innerText = 
+            String(hours).padStart(2, '0') + ":" + 
+            String(minutes).padStart(2, '0') + ":" + 
+            String(seconds).padStart(2, '0');
 
-    <div id="poetry-section" class="content-section container">
-        <button class="btn back-btn" onclick="showHome()">← پیچھے جائیں</button>
-        <h2>اردو شاعری</h2><br>
-        <div id="poetry-container" class="episodes-grid"></div>
-    </div>
+        // اگر رات کے 12 بج جائیں تو کوڈز ریفریش کر دیں
+        if (hours === 0 && minutes === 0 && seconds === 0) {
+            updateAdminPanel();
+        }
+    }, 1000);
+}
 
-    <div id="codewords-section" class="content-section container">
-        <button class="btn back-btn" onclick="showHome()">← پیچھے جائیں</button>
-        <h2>کوڈ ورڈز لسٹ</h2><br>
-        <div id="codewords-container"></div>
-    </div>
-
-    <div id="about-section" class="content-section container">
-        <button class="btn back-btn" onclick="showHome()">← پیچھے جائیں</button>
-        <h2>مصنف کے بارے میں</h2><br>
-        <div id="about-container"></div>
-    </div>
-
-    <div id="payment-modal" class="modal">
-        <div class="modal-content">
-            <h2 id="modal-title">یہ حصہ لاک ہے</h2>
-            <p id="payment-message"></p>
-            <a href="#" id="whatsapp-link" class="btn btn-wa" target="_blank">واٹس ایپ پر رابطہ کریں</a>
-            <button class="btn" onclick="showCodeModal()" style="background: #764ba2; color: #fff;">کوڈ درج کریں</button>
-            <button class="btn" onclick="closeModal()">بند کریں</button>
-        </div>
-    </div>
-
-    <div id="code-modal" class="modal">
-        <div class="modal-content">
-            <h2>🔑 کوڈ ورڈ لکھیں</h2>
-            <input type="text" id="code-input" style="width: 100%; padding: 10px; margin: 15px 0;" placeholder="مثال: YHDpkg1MS">
-            <button class="btn" onclick="verifyCode()" style="background: #25D366; color: #fff;">تصدیق کریں</button>
-            <button class="btn" onclick="closeModal()">کینسل</button>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
+// لوڈ ہونے پر چلائیں
+updateAdminPanel();
+startCountdown();
+</script>
