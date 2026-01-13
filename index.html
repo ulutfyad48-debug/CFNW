@@ -1,76 +1,248 @@
-<div style="background: #1a1f3a; color: white; padding: 25px; border-radius: 20px; margin-top: 30px; font-family: 'Noto Nastaliq Urdu', serif; border: 2px solid #ff0a54; box-shadow: 0 10px 40px rgba(255,10,84,0.3);">
-    <h2 style="color: #ff0a54; text-align: center; font-size: 2rem;">🛠️ ایڈمن کنٹرول پینل</h2>
-    <p id="current-date" style="text-align: center; font-size: 16px; color: #00d9ff; margin-bottom: 5px;"></p>
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ناولستان - ایڈمن پینل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Noto Nastaliq Urdu', serif; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #fff; min-height: 100vh; padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { text-align: center; margin-bottom: 30px; font-size: 2.5rem; color: #00d9ff; text-shadow: 0 0 20px rgba(0,217,255,0.5); }
+        
+        .novel-section { 
+            background: rgba(255,255,255,0.05); 
+            border-radius: 20px; padding: 25px; 
+            margin-bottom: 30px; 
+            border: 2px solid rgba(255,10,84,0.3);
+        }
+        .novel-title { 
+            font-size: 1.8rem; margin-bottom: 20px; 
+            color: #ff0a54; text-align: center;
+            border-bottom: 2px solid rgba(255,10,84,0.3);
+            padding-bottom: 10px;
+        }
+        
+        .codes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 15px; }
+        .code-card { 
+            background: rgba(0,0,0,0.4); 
+            padding: 15px; 
+            border-radius: 12px; 
+            border: 1px solid rgba(0,217,255,0.3);
+            text-align: center;
+        }
+        .code-label { font-size: 0.85rem; opacity: 0.7; margin-bottom: 5px; }
+        .code-value { 
+            font-size: 1.3rem; 
+            font-weight: bold; 
+            color: #00d9ff; 
+            letter-spacing: 2px;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            padding: 10px;
+            background: rgba(0,217,255,0.1);
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        .code-value:hover { background: rgba(0,217,255,0.2); transform: scale(1.05); }
+        
+        .date-info { 
+            text-align: center; 
+            background: rgba(255,10,84,0.2); 
+            padding: 15px; 
+            border-radius: 15px; 
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+        }
+        
+        .instructions { 
+            background: rgba(0,217,255,0.1); 
+            padding: 20px; 
+            border-radius: 15px; 
+            margin-top: 30px;
+            border: 1px solid rgba(0,217,255,0.3);
+        }
+        .instructions h3 { color: #00d9ff; margin-bottom: 10px; }
+        .instructions li { margin: 8px 0; line-height: 1.8; }
+        
+        .copy-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #16a34a;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        .copy-notification.show { display: block; animation: fadeInOut 2s; }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .group-section {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .group-title {
+            font-size: 1.1rem;
+            color: #fbbf24;
+            margin-bottom: 10px;
+            text-align: center;
+            border-bottom: 1px solid rgba(251,191,36,0.3);
+            padding-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="copy-notification" id="copyNotif">✅ کوڈ کاپی ہو گیا!</div>
     
-    <div style="text-align: center; background: rgba(0,217,255,0.1); padding: 10px; border-radius: 10px; margin-bottom: 20px; border: 1px dashed #00d9ff;">
-        <span style="font-size: 14px; color: #ffffff;">اگلا کوڈ تبدیل ہونے میں وقت باقی:</span>
-        <div id="timer" style="font-size: 20px; font-weight: bold; color: #fbbf24; letter-spacing: 2px;">00:00:00</div>
+    <div class="container">
+        <h1>🔐 ناولستان - ایڈمن پینل</h1>
+        
+        <div class="date-info" id="dateInfo"></div>
+
+        <!-- باز عشق -->
+        <div class="novel-section">
+            <div class="novel-title">🌹 باز عشق</div>
+            
+            <div class="group-section">
+                <div class="group-title">📦 گروپ 1 (اقساط 11-50) - قیمت: 50 روپے</div>
+                <div class="codes-grid" id="baz-group1"></div>
+            </div>
+            
+            <div class="group-section">
+                <div class="group-title">💎 گروپ 2 (اقساط 51-100) - قیمت: 100 روپے</div>
+                <div class="codes-grid" id="baz-group2"></div>
+            </div>
+        </div>
+
+        <!-- وہ جو نظر انداز بو گئے -->
+        <div class="novel-section">
+            <div class="novel-title">👁️ وہ جو نظر انداز بو گئے</div>
+            
+            <div class="group-section">
+                <div class="group-title">📦 گروپ 1 (اقساط 11-50) - قیمت: 50 روپے</div>
+                <div class="codes-grid" id="wo-group1"></div>
+            </div>
+            
+            <div class="group-section">
+                <div class="group-title">💎 گروپ 2 (اقساط 51-100) - قیمت: 100 روپے</div>
+                <div class="codes-grid" id="wo-group2"></div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📌 استعمال کی ہدایات:</h3>
+            <ul>
+                <li>✅ یہ کوڈز روزانہ خودکار طور پر اپڈیٹ ہوتے ہیں</li>
+                <li>🔄 ہر روز نئے کوڈز جنریٹ ہوتے ہیں</li>
+                <li>📋 کوڈ پر کلک کریں تو خودکار کاپی ہو جائے گا</li>
+                <li>💰 گروپ 1: اقساط 11-50 (5-5 اقساط کا پیکج)</li>
+                <li>💎 گروپ 2: اقساط 51-100 (تمام باقی اقساط)</li>
+                <li>🔐 دونوں ناولوں کے الگ الگ کوڈز ہیں</li>
+                <li>⚠️ یہ پینل صرف ایڈمن کے لیے ہے - شیئر نہ کریں</li>
+            </ul>
+        </div>
     </div>
 
-    <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
-    
-    <div id="admin-codes-list" style="display: grid; gap: 12px;">
-        </div>
-</div>
-
-<script>
-function updateAdminPanel() {
-    const d = new Date();
-    const datePart = d.getDate().toString() + (d.getMonth() + 1).toString();
-    const displayDate = d.toLocaleDateString('ur-PK', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    
-    document.getElementById('current-date').innerText = "آج کی تاریخ: " + displayDate;
-
-    // پیکیجز لسٹ (آپ کے فارمولے کے مطابق)
-    const packages = [
-        { name: "قسط 11-15", id: "P1_1" },
-        { name: "قسط 16-20", id: "P1_2" },
-        { name: "قسط 51-55", id: "P2_1" },
-        { name: "قسط 81-100", id: "P3_FINAL" }
-    ];
-
-    const list = document.getElementById('admin-codes-list');
-    list.innerHTML = '';
-
-    packages.forEach(pkg => {
-        // فارمولا: ID + Date + Month + X
-        const generatedCode = (pkg.id + datePart + "X").toUpperCase();
-        
-        const row = document.createElement('div');
-        row.style = "display: flex; justify-content: space-between; background: #0a0e27; padding: 15px; border-radius: 12px; border-right: 5px solid #22c55e; align-items: center;";
-        row.innerHTML = `
-            <span style="font-size: 1.1rem;">${pkg.name}:</span>
-            <strong style="color: #fbbf24; letter-spacing: 1.5px; font-size: 1.2rem; background: rgba(251,191,36,0.1); padding: 5px 12px; border-radius: 5px; border: 1px solid rgba(251,191,36,0.3);">${generatedCode}</strong>
-        `;
-        list.appendChild(row);
-    });
-}
-
-function startCountdown() {
-    setInterval(() => {
-        const now = new Date();
-        const tomorrow = new Date(now);
-        tomorrow.setHours(24, 0, 0, 0); // رات 12 بجے کا وقت
-
-        const diff = tomorrow - now;
-        
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((diff / (1000 * 60)) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
-
-        document.getElementById('timer').innerText = 
-            String(hours).padStart(2, '0') + ":" + 
-            String(minutes).padStart(2, '0') + ":" + 
-            String(seconds).padStart(2, '0');
-
-        // اگر رات کے 12 بج جائیں تو کوڈز ریفریش کر دیں
-        if (hours === 0 && minutes === 0 && seconds === 0) {
-            updateAdminPanel();
+    <script>
+        function generateCode(novelId, pkgId) {
+            const d = new Date();
+            const code = (novelId + "_" + pkgId + d.getDate() + (d.getMonth() + 1) + "X").toUpperCase();
+            return code;
         }
-    }, 1000);
-}
 
-// لوڈ ہونے پر چلائیں
-updateAdminPanel();
-startCountdown();
-</script>
+        function copyCode(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                const notif = document.getElementById('copyNotif');
+                notif.classList.add('show');
+                setTimeout(() => notif.classList.remove('show'), 2000);
+            });
+        }
+
+        function renderCodes() {
+            const d = new Date();
+            const dateStr = d.toLocaleDateString('ur-PK', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            document.getElementById('dateInfo').innerHTML = `📅 آج کی تاریخ: ${dateStr}`;
+
+            // باز عشق - Group 1 (Episodes 11-50)
+            const bazG1 = document.getElementById('baz-group1');
+            bazG1.innerHTML = '';
+            for(let i = 1; i <= 8; i++) {
+                const startEp = 11 + (i-1)*5;
+                const endEp = startEp + 4;
+                const code = generateCode('BAZ_ISHQ', `P1_${i}`);
+                bazG1.innerHTML += `
+                    <div class="code-card">
+                        <div class="code-label">اقساط ${startEp}-${endEp}</div>
+                        <div class="code-value" onclick="copyCode('${code}')">${code}</div>
+                    </div>
+                `;
+            }
+
+            // باز عشق - Group 2 (Episodes 51-100)
+            const bazG2 = document.getElementById('baz-group2');
+            const code2 = generateCode('BAZ_ISHQ', 'P2_PRO');
+            bazG2.innerHTML = `
+                <div class="code-card">
+                    <div class="code-label">اقساط 51-100 (تمام)</div>
+                    <div class="code-value" onclick="copyCode('${code2}')">${code2}</div>
+                </div>
+            `;
+
+            // وہ جو نظر انداز - Group 1 (Episodes 11-50)
+            const woG1 = document.getElementById('wo-group1');
+            woG1.innerHTML = '';
+            for(let i = 1; i <= 8; i++) {
+                const startEp = 11 + (i-1)*5;
+                const endEp = startEp + 4;
+                const code = generateCode('WO_JO_NAZR_ANDAZ', `P1_${i}`);
+                woG1.innerHTML += `
+                    <div class="code-card">
+                        <div class="code-label">اقساط ${startEp}-${endEp}</div>
+                        <div class="code-value" onclick="copyCode('${code}')">${code}</div>
+                    </div>
+                `;
+            }
+
+            // وہ جو نظر انداز - Group 2 (Episodes 51-100)
+            const woG2 = document.getElementById('wo-group2');
+            const code4 = generateCode('WO_JO_NAZR_ANDAZ', 'P2_PRO');
+            woG2.innerHTML = `
+                <div class="code-card">
+                    <div class="code-label">اقساط 51-100 (تمام)</div>
+                    <div class="code-value" onclick="copyCode('${code4}')">${code4}</div>
+                </div>
+            `;
+        }
+
+        window.onload = renderCodes;
+        
+        // Auto-refresh at midnight
+        setInterval(() => {
+            const now = new Date();
+            if(now.getHours() === 0 && now.getMinutes() === 0) {
+                renderCodes();
+            }
+        }, 60000);
+    </script>
+</body>
+</html>
